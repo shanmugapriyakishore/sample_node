@@ -16,10 +16,20 @@ const getSpecificProduct = async (req, res) => {
     const getproductDetails = await productServices.getspecificProduct(req.params.id);
     res.send( getproductDetails);
   };
-
+//delete product
+const deleteProduct = async (req,res)=>{
+    const deleteproduct  =  await productServices.deleteProduct(req.params.id)
+    res.send(deleteproduct)
+}  
+//get Active user
+const getActiveProducts = async(req,res)=>{
+      const product = await productServices.getActiveProducts()
+      const activeProduct = product.filter(product=> product.active)
+      res.send(activeProduct)
+}
 
 module.exports = {
     productDetails,
     getProductAll,
-    getSpecificProduct
+    getSpecificProduct,deleteProduct,getActiveProducts
 }

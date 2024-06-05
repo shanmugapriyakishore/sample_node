@@ -34,15 +34,29 @@ const getSpecificUser = async (req, res) => {
         res.status(500).send({ message: 'Server error', error });
     }
 }
+//delete user
+const deleteUser = async (req,res)=>{
+    const deleteDetails  =  await userService.deleteUser(req.params.id)
+    res.send(deleteDetails)
+}
 
-
-
-
-
+// //get Active user
+// const getActiveusers = async(req,res)=>{
+//       const users = await userService.getUsers()
+//       const activeUser = users.filter(users => users.active)
+//       res.send(activeUser)
+// }
+const getActiveusers = async(req,res)=>{
+    const User = await userService.getActiveUsers();
+    res.send(User)
+}
   
 module.exports ={
     createUserDetails,
     getUserAll,
     getSpecificUser,
-    loginuser
+    loginuser,
+    deleteUser,
+    getActiveusers
+   
 }

@@ -1,4 +1,6 @@
+const registerModel = require("../models/registerModels");
 const userModel = require("../models/registerModels")
+
 const createUserDetails = async(body)=>{
     const createData = await userModel.create(body)
     return createData;
@@ -15,18 +17,19 @@ const getSpecificUser = async(id)=>{
     //        },
     //     },
     // ]);
-    //        {
-    //             $match: {
-    //                 $and: [{ _id: { $eq: id } }, { name: { $eq: "divya" } }],
-    //            },
-    //         },
-    //  ]);
+    
            {
-              $match: {
-                $or: [{ _id: { $eq: id } }, { name: { $eq: "Alice" } }],
-                    },
+                $match: {
+                    $and: [{ _id: { $eq: id } }, { active: { $eq: true } }],
+               },
             },
-         ]);
+     ]);
+        //    {
+        //       $match: {
+        //         $or: [{ _id: { $eq: id } }, { name: { $eq: "Alice" } }],
+        //             },
+        //     },
+        //  ]);
     return userDetails
 }
 
@@ -38,9 +41,38 @@ const getUsers = async()=>{
     return userDetails
 }
 
+//deleteUser
+const deleteUser = async (id) => {
+    const deleteUserDetails = await registerModel.findById({ _id: id });
+    if (!deleteUserDetails) {
+      console.log("user not found");
+    } else {
+      const deletedata = await registerModel.findByIdAndDelete({ _id: id });
+      console.log(deletedata);
+    }
+    return deleteUserDetails;
+  };
+    
+// //get active users
+// const getActiveUsers = async()=>{
+//     const userDetails = await userModel.find({});
+//         return userDetails;
+// }
+//get Active users
+const getActiveUsers = async () => {
+    const activeUsers = await userModel.aggregate([
+        {
+            $match: { active: true }
+        }
+    ]);
+    return activeUsers;
+}
+
 
 module.exports = {
     createUserDetails,
     getUsers,
-    getSpecificUser
+    getSpecificUser,
+    deleteUser,
+    getActiveUsers
 }
