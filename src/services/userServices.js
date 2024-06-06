@@ -1,4 +1,4 @@
-const registerModel = require("../models/registerModels");
+// const registerModel = require("../models/registerModels");
 const userModel = require("../models/registerModels")
 
 const createUserDetails = async(body)=>{
@@ -53,12 +53,12 @@ const deleteUser = async (id) => {
     return deleteUserDetails;
   };
     
-// //get active users
+// //get active users- using filter Method
 // const getActiveUsers = async()=>{
 //     const userDetails = await userModel.find({});
 //         return userDetails;
 // }
-//get Active users
+//get Active users-aggregation method
 const getActiveUsers = async () => {
     const activeUsers = await userModel.aggregate([
         {
@@ -67,12 +67,18 @@ const getActiveUsers = async () => {
     ]);
     return activeUsers;
 }
-
+//login authentication
+const  loginUserService = async (name, password) => {
+    const user = await userModel.findOne({ name, password });
+    return  user ;
+};
 
 module.exports = {
     createUserDetails,
     getUsers,
     getSpecificUser,
     deleteUser,
-    getActiveUsers
+    getActiveUsers,
+    loginUserService
+
 }

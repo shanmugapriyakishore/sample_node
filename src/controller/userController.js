@@ -34,6 +34,16 @@ const getSpecificUser = async (req, res) => {
         res.status(500).send({ message: 'Server error', error });
     }
 }
+//login authentication
+const loginUserController = async (req, res, next) => {
+    const { name, password } = req.body;
+    const result = await userService.loginUserService(name, password);
+    if (result) {
+        res.status(200).send({ message: 'Authorization successful', result });
+    } else {
+        res.status(401).send({ message: 'Authorization failed' });
+    }
+};
 //delete user
 const deleteUser = async (req,res)=>{
     const deleteDetails  =  await userService.deleteUser(req.params.id)
@@ -46,6 +56,7 @@ const deleteUser = async (req,res)=>{
 //       const activeUser = users.filter(users => users.active)
 //       res.send(activeUser)
 // }
+//get Active user - aggregation method
 const getActiveusers = async(req,res)=>{
     const User = await userService.getActiveUsers();
     res.send(User)
@@ -57,6 +68,7 @@ module.exports ={
     getSpecificUser,
     loginuser,
     deleteUser,
-    getActiveusers
+    getActiveusers,
+    loginUserController
    
 }

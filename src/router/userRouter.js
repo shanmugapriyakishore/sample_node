@@ -9,7 +9,7 @@ router.route("/getuserdata").get(userController.getUserAll)
 // get by id
 router.route('/getbyid/:id').get(userController.getSpecificUser)
 //login user
-router.route('/login').post(userController.loginuser);
+router.route('/login').post(userController. loginUserController );
 //delete user
 router.route("/delete/:id").delete(userController.deleteUser);
 //get active user
