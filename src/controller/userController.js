@@ -61,6 +61,18 @@ const getActiveusers = async(req,res)=>{
     const User = await userService.getActiveUsers();
     res.send(User)
 }
+/////fetch data
+const getUser = async (req, res) => {
+    console.log(req.params.id)
+    try {
+        const user = await userService.getUserById(req.params.id);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).send({ message: 'Error fetching user details' });
+    }
+};
+
+
   
 module.exports ={
     createUserDetails,
@@ -69,6 +81,8 @@ module.exports ={
     loginuser,
     deleteUser,
     getActiveusers,
-    loginUserController
+    loginUserController,
+    getUser
+    
    
 }

@@ -13,7 +13,12 @@ router.route('/login').post(userController. loginUserController );
 //delete user
 router.route("/delete/:id").delete(userController.deleteUser);
 //get active user
-router.route("/getActiveuser").get(userController.getActiveusers)
+router.route("/getActiveuser").get(userController.getActiveusers);
+//fetch 
+router.route("/fetchdata/:id").get(userController.getUser);
+
+
 
 
 module.exports = router;
+

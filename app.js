@@ -115,6 +115,9 @@ const userRouter = require("./src/router/userRouter")
 const productRoute = require("./src/router/productRouter")
 const wishlistRoute = require("./src/router/wishlistRouter")
 const bodyParser = require("body-parser")
+const cors = require('cors');
+
+app.use(cors())
 
 app.use(bodyParser.json())
 app.use("/user",userRouter)

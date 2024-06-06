@@ -72,6 +72,11 @@ const  loginUserService = async (name, password) => {
     const user = await userModel.findOne({ name, password });
     return  user ;
 };
+//fetch data
+const getUserById = async (id) => {
+    const user = await userModel.findById(id);
+    return user;
+};
 
 module.exports = {
     createUserDetails,
@@ -79,6 +84,7 @@ module.exports = {
     getSpecificUser,
     deleteUser,
     getActiveUsers,
-    loginUserService
+    loginUserService,
+    getUserById
 
 }
