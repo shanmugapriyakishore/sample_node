@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const userController = require('../controller/userController')
 
+
 //create data
 router.route("/register").post(userController.createUserDetails)
 //get data
@@ -17,8 +18,8 @@ router.route("/getActiveuser").get(userController.getActiveusers);
 //fetch 
 router.route("/fetchdata/:id").get(userController.getUser);
 
-
-
+//aggregation
+router.route("/user/wishlist/Product").get(userController.getwishlistproducts)
 
 module.exports = router;
 

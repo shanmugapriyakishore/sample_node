@@ -63,14 +63,24 @@ const getActiveusers = async(req,res)=>{
 }
 /////fetch data
 const getUser = async (req, res) => {
-    console.log(req.params.id)
+    console.log(req.params.id);
     try {
         const user = await userService.getUserById(req.params.id);
+        console.log(user);
         res.status(200).json(user);
     } catch (error) {
+        console.error('Error fetching user details:', error);
         res.status(500).send({ message: 'Error fetching user details' });
     }
 };
+
+//db aggregation method
+
+const getwishlistproducts = async(req,res)=>{
+    const wishlistproduct = await userService.getwishlistProducts();
+    res.send(wishlistproduct)
+}
+
 
 
   
@@ -82,7 +92,8 @@ module.exports ={
     deleteUser,
     getActiveusers,
     loginUserController,
-    getUser
+    getUser,
+    getwishlistproducts
     
    
 }
