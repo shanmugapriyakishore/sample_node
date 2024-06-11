@@ -12,7 +12,8 @@ router.route('/getproductid/:id').get(productController.getSpecificProduct)
 router.route("/delete/:id").delete(productController.deleteProduct);
 //get active product
 router.route("/getActiveProduct").get(productController.getActiveProducts)
-
+// updateproduct
+router.route("/get/product/update/:id").put(productController.productUpdatedata)
 
 
 module.exports = router;

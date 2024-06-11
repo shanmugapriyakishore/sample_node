@@ -56,6 +56,22 @@ const getActiveProducts = async()=>{
     const productDetails = await productModel.find({});
         return productDetails;
 }
+//product Updatedata
+const productData = async (id,body)=>{
+    const product = await productModel.findById({_id:id});
+    if (!product) {
+        console.log("product not found");
+    }
+
+    const updatedData = await productModel.findByIdAndUpdate(
+        id,
+        body,
+        { new: true }
+    );
+
+    return updatedData;
+
+};
 
 
 
@@ -66,5 +82,6 @@ module.exports = {
     getProducts,
     deleteProduct,
     getspecificProduct,
-    getActiveProducts
+    getActiveProducts,
+    productData
 }

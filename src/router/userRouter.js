@@ -19,7 +19,10 @@ router.route("/getActiveuser").get(userController.getActiveusers);
 router.route("/fetchdata/:id").get(userController.getUser);
 
 //aggregation
-router.route("/user/wishlist/Product").get(userController.getwishlistproducts)
+router.route("/user/wishlist/Product").get(userController.getwishlistproducts);
+
+//updtae user
+router.route("/update/get/user/:id").put(userController. userUpdatedata)
 
 module.exports = router;
 

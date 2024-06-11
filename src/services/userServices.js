@@ -1,4 +1,5 @@
 // const registerModel = require("../models/registerModels");
+const registerModel = require("../models/registerModels");
 const userModel = require("../models/registerModels")
 const wishlist = require ("../models/wishlistModel")
 
@@ -116,7 +117,22 @@ const getwishlistProducts = async()=>{
       ]);
     return result
 }
+//updatedata
+const userUpdateData = async (id, body) =>{
+      const user = await registerModel.findById({_id:id});
+      if (!user) {
+          console.log("User not found");
+      }
 
+      const updatedData = await registerModel.findByIdAndUpdate(
+          id,
+          body,
+          { new: true }
+      );
+
+      return updatedData;
+  
+};
 module.exports = {
     createUserDetails,
     getUsers,
@@ -125,6 +141,8 @@ module.exports = {
     getActiveUsers,
     loginUserService,
     getUserById,
-    getwishlistProducts
+    getwishlistProducts,
+    userUpdateData
+    
 
 }

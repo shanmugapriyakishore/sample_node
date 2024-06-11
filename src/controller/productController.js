@@ -28,8 +28,19 @@ const getActiveProducts = async(req,res)=>{
       res.send(activeProduct)
 }
 
+//updateProduct
+const productUpdatedata = async (req,res)=>{
+    const updateproduct = await productServices.productData(req.params.id,req.body);
+    res.send(updateproduct)
+}
+
+
 module.exports = {
     productDetails,
     getProductAll,
-    getSpecificProduct,deleteProduct,getActiveProducts
+    getSpecificProduct,
+    deleteProduct,
+    getActiveProducts,
+    productUpdatedata
+
 }

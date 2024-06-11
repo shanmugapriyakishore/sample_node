@@ -81,6 +81,13 @@ const getwishlistproducts = async(req,res)=>{
     res.send(wishlistproduct)
 }
 
+//update method
+
+const userUpdatedata = async (req,res)=>{
+    const Updatedata = await userService.userUpdateData(req.params.id,req.body);
+    res.send(Updatedata)
+}
+
 
 
   
@@ -93,7 +100,8 @@ module.exports ={
     getActiveusers,
     loginUserController,
     getUser,
-    getwishlistproducts
+    getwishlistproducts,
+    userUpdatedata
     
    
 }
