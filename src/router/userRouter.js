@@ -20,6 +20,11 @@ router.route("/fetchdata/:id").get(userController.getUser);
 
 //aggregation
 router.route("/user/wishlist/Product").get(userController.getwishlistproducts);
+//getwishlistbyid
+router.route("/get/wishlist/product/:id").get(userController.wishlistData)
+//getordersbyid
+router.route("/get/orders/byid/:id").get(userController.orderData)
+
 
 //updtae user
 router.route("/update/get/user/:id").put(userController. userUpdatedata)

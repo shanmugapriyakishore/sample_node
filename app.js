@@ -114,6 +114,7 @@ const app = express()
 const userRouter = require("./src/router/userRouter")
 const productRoute = require("./src/router/productRouter")
 const wishlistRoute = require("./src/router/wishlistRouter")
+const orderRoute = require("./src/router/orderRouter")
 const bodyParser = require("body-parser")
 const cors = require('cors');
 
@@ -123,6 +124,7 @@ app.use(bodyParser.json())
 app.use("/user",userRouter)
 app.use("/product",productRoute)
 app.use("/wishlist",wishlistRoute)
+app.use("/order",orderRoute)
 
 const db = require('./src/database/db')
 db.on("open",()=>{

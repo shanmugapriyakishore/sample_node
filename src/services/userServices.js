@@ -1,7 +1,8 @@
 // const registerModel = require("../models/registerModels");
 const registerModel = require("../models/registerModels");
-const userModel = require("../models/registerModels")
-const wishlist = require ("../models/wishlistModel")
+const userModel = require("../models/registerModels");
+const wishlistModel = require("../models/wishlistModel");
+
 
 const createUserDetails = async(body)=>{
     const createData = await userModel.create(body)
@@ -82,10 +83,11 @@ const getUserById = async (id) => {
 
 //aggregation db
 const getwishlistProducts = async()=>{
-    const result = await wishlist.aggregate([
+    const result = await wishlistModel.aggregate([
+     
         {
           $lookup: {
-            from: 'registers', // collection name in MongoDB
+            from: 'wishlists', // collection name in MongoDB
             localField: 'userID',
             foreignField: '_id',
             as: 'user_info'
@@ -117,6 +119,131 @@ const getwishlistProducts = async()=>{
       ]);
     return result
 }
+// wishlist aggregation
+const getuserProduct = async(id)=>{
+  const userProduct = await registerModel.aggregate([
+    {
+      $match: {
+        _id: id
+      }
+    },
+    {
+      $lookup: {
+        from: 'wishlists',
+        localField: '_id',
+        foreignField: 'userID',
+        as: 'wishlistdata'
+      }
+    },
+    {
+      $unwind: "$wishlistdata"
+    },
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'wishlistdata.productId',
+        foreignField: '_id',
+        as: 'productdata'
+      }
+    },
+    {
+      $unwind: "$productdata"
+    },
+    {
+      $group: {
+        _id: {
+          name: "$name",
+          email: "$email"
+        },
+
+        productData: {
+          $push: {
+            productName: "$productdata.productName",
+            price: "$productdata.price",
+            qty: "$productdata.qty"
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        name: "$_id.name",
+        email: "$_id.email",
+        productData: 1,
+       
+      }
+    }
+    
+  ]);
+
+  return userProduct;
+};
+//orderaggregation
+const getOrderproduct = async(id)=>{
+  const orderProduct = await registerModel.aggregate([
+    {
+      $match: {
+        _id: id
+      }
+    },
+    {
+      $lookup: {
+        from: 'orders',
+        localField: '_id',
+        foreignField: 'userID',
+        as: 'ordersdata'
+      }
+    },
+    {
+      $unwind: "$ordersdata"
+    },
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'ordersdata.productId',
+        foreignField: '_id',
+        as: 'productdata'
+      }
+    },
+    {
+      $unwind: "$productdata"
+    },
+    {
+      $group: {
+        _id: {
+          name: "$name",
+          email: "$email",
+          mobile: "$mobile"
+        },
+
+        orders: {
+          $push: {
+            // orderId: "$ordersdata._id",
+            // productId: "$ordersdata.productId",
+            productName: "$productdata.productName",
+            productImage:"$productdata.img",
+            deliveryStatus: "$ordersdata.DeliveryStatus"
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        name: "$_id.name",
+        email: "$_id.email",
+        mobile: "$_id.mobile",
+        orders: 1
+       
+      }
+    }
+    
+  ]);
+
+  return orderProduct;
+};
+
 //updatedata
 const userUpdateData = async (id, body) =>{
       const user = await registerModel.findById({_id:id});
@@ -142,7 +269,9 @@ module.exports = {
     loginUserService,
     getUserById,
     getwishlistProducts,
-    userUpdateData
+    userUpdateData,
+    getuserProduct,
+    getOrderproduct
     
 
 }

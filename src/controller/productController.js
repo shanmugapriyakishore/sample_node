@@ -8,8 +8,11 @@ const productDetails = async (req,res)=>{
 
 //getAllProducts function
 const getProductAll = async(req,res)=>{
-    const product = await productServices.getProducts();
-    res.send(product)
+    const product = await productServices.getProducts(req);
+    res.json({
+    count:product.length,
+    product
+})
 }
 //get specific product
 const getSpecificProduct = async (req, res) => {

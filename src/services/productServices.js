@@ -1,4 +1,5 @@
 const productModel = require("../models/productModel")
+const APIFeatures = require("../utilis/apiFeatures")
 
 //createproductdata
 const createProductDetails = async(body)=>{
@@ -6,8 +7,10 @@ const createProductDetails = async(body)=>{
     return createproductData;
 }
 //getproductfunction
-const getProducts = async()=>{
-    const productDetails = await productModel.find({});
+const getProducts = async(req)=>{
+  const resPerPage = 2
+  const apiFeatures = new APIFeatures(productModel.find({}),req.query).search().filter().paginate(resPerPage)
+    const productDetails = await apiFeatures.query ;
     return productDetails
 }
 //getspecificproduct

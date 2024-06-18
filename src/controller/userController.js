@@ -1,5 +1,7 @@
 const userService = require("../services/userServices")
-const registerModel  = require("../models/registerModels")
+// const registerModel  = require("../models/registerModels")
+const wishlistService = require("../services/wishlistServices")
+const orderService = require("../services/orderServices")
 // createUserfunction
 const createUserDetails =  async(req,res)=>{
     const userData = await userService.createUserDetails(req.body);
@@ -8,9 +10,14 @@ const createUserDetails =  async(req,res)=>{
 }
 
 //getUserAll function
-const getUserAll = async(req,res)=>{
+const getUserAll = async(req,res,next)=>{
     const User = await userService.getUsers();
-    res.send(User)
+    res.json({
+        count:User.length,
+        User
+
+    })
+   
 }
 
 //getspecificUserfunction
@@ -37,9 +44,16 @@ const getSpecificUser = async (req, res) => {
 //login authentication
 const loginUserController = async (req, res, next) => {
     const { name, password } = req.body;
-    const result = await userService.loginUserService(name, password);
-    if (result) {
-        res.status(200).send({ message: 'Authorization successful', result });
+    const user = await userService.loginUserService(name, password);
+    if (user) {
+        const wishlistData = await wishlistService.getWishlistByUserId(user._id);
+        const orderList = await orderService.getOrdersByUserId(user._id);
+
+        res.status(200).send
+        ({ message: 'Authorization successful', 
+            wishlist: wishlistData,
+             orders: orderList,
+             user });
     } else {
         res.status(401).send({ message: 'Authorization failed' });
     }
@@ -81,6 +95,19 @@ const getwishlistproducts = async(req,res)=>{
     res.send(wishlistproduct)
 }
 
+//wishlist aggregation
+const wishlistData = async(req,res)=>{
+    const wishlistProduct = await userService.getuserProduct(req.params.id);
+    res.send(wishlistProduct)
+}
+
+//order aggregation
+const orderData = async(req,res)=>{
+    const orderProduct = await userService.getOrderproduct(req.params.id);
+    res.send(orderProduct)
+}
+
+
 //update method
 
 const userUpdatedata = async (req,res)=>{
@@ -101,7 +128,9 @@ module.exports ={
     loginUserController,
     getUser,
     getwishlistproducts,
-    userUpdatedata
+    userUpdatedata,
+    wishlistData,
+    orderData
     
    
 }
