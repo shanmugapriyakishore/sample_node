@@ -34,5 +34,16 @@ class APIfeatures{
         this.query.limit(resPerPage).skip(skip);
         return this;
     }
+    // sort() {
+    //     if (this.queryStr.sort) {
+    //         const sortBy = this.queryStr.sort.split(',').join(' ');
+    //         this.query = this.query.sort(sortBy);
+    //     } else {
+    //         this.query = this.query.sort('price'); 
+    //     }
+    //     return this;
+    // }
 }
+
+
 module.exports = APIfeatures

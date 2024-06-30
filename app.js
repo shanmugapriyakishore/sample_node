@@ -115,6 +115,7 @@ const userRouter = require("./src/router/userRouter")
 const productRoute = require("./src/router/productRouter")
 const wishlistRoute = require("./src/router/wishlistRouter")
 const orderRoute = require("./src/router/orderRouter")
+const otpRoute = require("./src/router/otpRouter")
 const bodyParser = require("body-parser")
 const cors = require('cors');
 
@@ -125,6 +126,7 @@ app.use("/user",userRouter)
 app.use("/product",productRoute)
 app.use("/wishlist",wishlistRoute)
 app.use("/order",orderRoute)
+app.use('/otp', otpRoute);
 
 const db = require('./src/database/db')
 db.on("open",()=>{

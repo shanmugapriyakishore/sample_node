@@ -1,7 +1,10 @@
 const userService = require("../services/userServices")
-// const registerModel  = require("../models/registerModels")
+ const registerModel  = require("../models/registerModels")
 const wishlistService = require("../services/wishlistServices")
 const orderService = require("../services/orderServices")
+const crypto = require('crypto');
+const jwt = require("jsonwebtoken")
+const token = require("../models/tokenModel")
 // createUserfunction
 const createUserDetails =  async(req,res)=>{
     const userData = await userService.createUserDetails(req.body);
@@ -19,6 +22,23 @@ const getUserAll = async(req,res,next)=>{
     })
    
 }
+//getuserDetails by token
+const getUserDetails = async (req, res) => {
+    const token = req.headers['token'];
+  
+    try {
+      const user = await userService.getUserByToken(token);
+      res.status(200).send(user);
+    } catch (error) {
+      if (error.message === 'Token is required') {
+        return res.status(400).send(error.message);
+      } else if (error.message === 'User not found') {
+        return res.status(404).send(error.message);
+      } else {
+        return res.status(500).send('Internal Server Error');
+      }
+    }
+  };
 
 //getspecificUserfunction
 const getSpecificUser = async (req, res) => {
@@ -32,10 +52,21 @@ const getSpecificUser = async (req, res) => {
     try {
         const user = await registerModel.findOne({ name,password });
         console.log(user)
-        if (user) {
-            res.status(200).send({ message: 'Authorization successful', user });
-        } else {
+        if (!user) {
             res.status(401).send({ message: 'Authorization failed' });
+            //craete jwt token
+        } else {
+            const payload = {
+                userDetails : user
+            }
+            const sign_key = crypto.randomBytes(32).toString("hex");
+            console.log(sign_key,"sign_key")
+            const token = jwt.sign(payload,sign_key,{expiresIn:"24h"})
+            const savedTokenDetails = await userService.storeUserToken(user._id, token);
+            res.status(200).send({
+                token:savedTokenDetails,
+                message:"user login succesfully"
+            })
         }
     } catch (error) {
         res.status(500).send({ message: 'Server error', error });
@@ -58,6 +89,20 @@ const loginUserController = async (req, res, next) => {
         res.status(401).send({ message: 'Authorization failed' });
     }
 };
+//login authentication
+// const loginUserController = async (req, res, next) => {
+//     const { name, password } = req.body;
+//     const user = await userService.loginUserService(name, password);
+//     console.log(user)
+//     if (user){
+//         res.status(200).send({ message: 'Authorization successful', user });
+//     } else {
+//         res.status(401).send({ message: 'Authorization failed' });
+//     }
+    
+// }
+
+
 //delete user
 const deleteUser = async (req,res)=>{
     const deleteDetails  =  await userService.deleteUser(req.params.id)
@@ -114,6 +159,20 @@ const userUpdatedata = async (req,res)=>{
     const Updatedata = await userService.userUpdateData(req.params.id,req.body);
     res.send(Updatedata)
 }
+// email verification
+const registerUser = async (req, res) => {
+     
+      // Create a new user
+      const user = await userService.createUser(req.body);
+  
+      // Send verification email
+      await userService.sendVerificationEmail(user, req.body.subject, req);
+
+        // Respond with success message
+        res.status(200).json({ message: 'User registered. Please check your email to verify your account.' });
+    }
+
+
 
 
 
@@ -130,7 +189,10 @@ module.exports ={
     getwishlistproducts,
     userUpdatedata,
     wishlistData,
-    orderData
+    orderData,
+    registerUser,
+    getUserDetails
+    
     
    
 }

@@ -5,12 +5,17 @@ const userController = require('../controller/userController')
 
 //create data
 router.route("/register").post(userController.createUserDetails)
+router.route("/newregister").post(userController.registerUser)
+
+
 //get data
 router.route("/getuserdata").get(userController.getUserAll)
+router.route("/getUserDetails").post(userController. getUserDetails)
 // get by id
 router.route('/getbyid/:id').get(userController.getSpecificUser)
 //login user
 router.route('/login').post(userController. loginUserController );
+router.route('/newlogin').post(userController.loginuser)
 //delete user
 router.route("/delete/:id").delete(userController.deleteUser);
 //get active user
